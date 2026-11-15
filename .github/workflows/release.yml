@@ -32,6 +32,6 @@ jobs:
 
       - name: Publish release assets
         env:
-          GH_TOKEN: $&#123;&#123; github.token &#125;&#125;
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload "$&#123;GITHUB_REF_NAME&#125;" dist/*.zip --clobber
+          gh release upload "$GITHUB_REF_NAME" dist/*.zip --clobber
