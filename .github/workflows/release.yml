@@ -3,6 +3,10 @@ name: Build Release Packages
 
 on:
   workflow_dispatch:
+    tag:
+      description: 'Release tag (e.g. v0.3.1)'
+      required: true
+      type: string
   push:
     tags:
       - 'v*'
@@ -17,6 +21,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,5 +39,6 @@ jobs:
       - name: Publish release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: |
-          gh release upload "$GITHUB_REF_NAME" dist/*.zip --clobber
+          gh release upload "$RELEASE_TAG" dist/*.zip --clobber
