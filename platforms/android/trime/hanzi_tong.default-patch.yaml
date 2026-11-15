@@ -1,0 +1,19 @@
+# encoding: utf-8
+#
+# 漢字通 / Han Character Bridge
+#
+# Not applied on its own. Rime only reads default.custom.yaml.
+# Copying this file over that name would drop other schemas and switches.
+#
+# When default.custom.yaml does not exist, copy this file to that name.
+# When it exists, add these entries under its patch: key.
+
+patch:
+  schema_list/+:
+    - schema: hanzi_tong
+  switcher/save_options/+:
+    - disable_guan
+    - disable_yue
+    - disable_min
+    - disable_han
+    - disable_ri

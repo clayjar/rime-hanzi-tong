@@ -135,6 +135,9 @@ local function balance(input, env)
   end
 end
 
+-- rime.lua publishes balance as hanzi_tong_balance.
+-- A mobile patch can load this table directly as lua_filter@*hanzi_tong*balance
+-- and leave an existing rime.lua in place.
 return {
   balance = balance,
   -- Exposed for the unit-test mirror of the comment rewrite.

@@ -1,0 +1,21 @@
+# encoding: utf-8
+#
+# 漢字通 / Han Character Bridge
+#
+# Not applied on its own. Trime reads trime.custom.yaml.
+# Copying this file over that name would drop other theme patches.
+#
+# When trime.custom.yaml does not exist, copy this file to that name.
+# When it exists, add the preset_keyboards entry under its patch: key.
+#
+# Trime selects a keyboard whose id matches the schema id, so hanzi_tong
+# uses the built-in 36-key layout (qwerty0): a digit row, then QWERTY.
+# Digits 1-8 are tone keys. 9 and 0 are not in the schema alphabet.
+# Long-press f pages up and long-press g pages down.
+# Long-press the 中/英 key opens the schema menu (官 粵 閩 韓 日).
+#
+# This patches the default theme, trime.yaml. A theme you selected under
+# another name keeps its own keyboards until the same entry is added there.
+
+patch:
+  "preset_keyboards/hanzi_tong/import_preset": qwerty0

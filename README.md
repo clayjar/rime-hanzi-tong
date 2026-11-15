@@ -1,6 +1,6 @@
 # 漢字通 / Han Character Bridge
 
-Unified multilingual phonetic input for 漢字: type a spelling in Latin letters and 漢字通 looks up Mandarin, Cantonese, Minnan, Korean Hanja, and Japanese Kanji from that same input. Schema 0.1.0 is for characters and words on Weasel (小狼毫), Squirrel (鼠鬚管), and IBus or Fcitx.
+Unified multilingual phonetic input for 漢字: type a spelling in Latin letters and 漢字通 looks up Mandarin, Cantonese, Minnan, Korean Hanja, and Japanese Kanji from that same input. Schema 0.1.0 is for characters and words on Weasel (小狼毫), Squirrel (鼠鬚管), IBus or Fcitx, Trime (同文), and Hamster (倉輸入法).
 
 | | |
 | --- | --- |
@@ -22,9 +22,9 @@ Build the dictionaries once if `hanzi_tong.pinyin.dict.yaml` is not already pres
 python tools/build_dictionaries.py
 ```
 
-Each installer copies those files into the Rime user directory, appends `hanzi_tong` to `schema_list`, adds the five language options to `switcher/save_options`, and adds the Lua hook to `rime.lua` only when they are missing. None of them deploy, and none of them write a `hanzi_tong.custom.yaml`. Afterward, redeploy from the input-method menu (重新部署). That redeploy is what loads the saved-option list.
+The desktop installers copy those files into the Rime user directory, append `hanzi_tong` to `schema_list`, add the five language options to `switcher/save_options`, and add the Lua hook to `rime.lua` only when they are missing. None of them deploy, and none of them write a `hanzi_tong.custom.yaml`. Afterward, redeploy from the input-method menu (重新部署). That redeploy is what loads the saved-option list.
 
-The frontend has to include librime-lua. Weasel and Squirrel 0.16 and newer do. On Linux, install `ibus-rime` or `fcitx5-rime` (Fcitx 4: `fcitx-rime`) built with librime-lua.
+The frontend has to include librime-lua. Weasel and Squirrel 0.16 and newer do, and Trime and Hamster ship it as well. On Linux, install `ibus-rime` or `fcitx5-rime` (Fcitx 4: `fcitx-rime`) built with librime-lua.
 
 ### Windows (Weasel)
 
@@ -62,6 +62,31 @@ bash tools/install-linux.sh fcitx
 | Fcitx 4 | `~/.config/fcitx/rime` |
 
 `XDG_CONFIG_HOME` and `XDG_DATA_HOME` replace `~/.config` and `~/.local/share` when they are set.
+
+### Android (Trime)
+
+Trime includes librime-lua. Install steps, the tone-key layout, and the patches that must be merged by hand are in [platforms/android/README.md](platforms/android/README.md).
+
+### iOS / iPadOS (Hamster)
+
+Hamster imports a zip onto the files already in its Rime directory. The package leaves `rime.lua` and `default.yaml` out so that import does not wipe them. Steps are in [platforms/ios/README.md](platforms/ios/README.md).
+
+## Packages
+
+One version, from the latest heading in `CHANGELOG.md`, is packed three ways. The linguistic files and `lua/hanzi_tong.lua` are the same in each archive. Build the dictionaries first:
+
+```bash
+python tools/build_dictionaries.py
+python tools/package_release.py
+```
+
+| Archive | Frontend |
+| --- | --- |
+| `dist/hanzi-tong-<version>-rime.zip` | Weasel, Squirrel, IBus, Fcitx |
+| `dist/hanzi-tong-<version>-android-trime.zip` | Trime |
+| `dist/hanzi-tong-<version>-ios-hamster.zip` | Hamster |
+
+Archives have no wrapper folder. Hamster rejects a zip that contains one, and Trime reads the user directory the same way.
 
 ## Typing
 

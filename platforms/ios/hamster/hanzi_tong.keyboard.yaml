@@ -1,0 +1,93 @@
+# encoding: utf-8
+#
+# 漢字通 / Han Character Bridge
+#
+# Import this file from Hamster: 键盘设置 → 键盘布局 → +.
+# The root key is keyboards, which is the node that import accepts.
+# This file is not a schema and it does not replace hamster.yaml.
+#
+# Digits 1-8 are tone keys and are sent through Rime.
+# 上頁 and 下頁 send Page_Up and Page_Down.
+# Space commits the highlighted candidate. ' is the syllable delimiter.
+# Swipe up on 退格 clears the spelling (重输).
+# 語言 opens the schema switches (官 粵 閩 韓 日).
+
+keyboards:
+  - name: "漢字通"
+    isPrimary: true
+    rowHeight: 42
+    rows:
+      - keys:
+          - {action: {character: {char: "1"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "2"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "3"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "4"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "5"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "6"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "7"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "8"}}, processByRIME: true, width: {percentage: 0.10}}
+          - action: {shortcutCommand: {sendKeys: {keys: "Page_Up"}}}
+            label: "上頁"
+            width: {percentage: 0.10}
+          - action: {shortcutCommand: {sendKeys: {keys: "Page_Down"}}}
+            label: "下頁"
+            width: {percentage: 0.10}
+      - keys:
+          - {action: {character: {char: "q"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "w"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "e"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "r"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "t"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "y"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "u"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "i"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "o"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "p"}}, processByRIME: true, width: {percentage: 0.10}}
+      - keys:
+          - {action: none, width: {percentage: 0.05}}
+          - {action: {character: {char: "a"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "s"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "d"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "f"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "g"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "h"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "j"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "k"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "l"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: none, width: {percentage: 0.05}}
+      - keys:
+          - {action: none, width: {percentage: 0.15}}
+          - {action: {character: {char: "z"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "x"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "c"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "v"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "b"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "n"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: {character: {char: "m"}}, processByRIME: true, width: {percentage: 0.10}}
+          - {action: none, width: {percentage: 0.15}}
+      - keys:
+          - action: {shortcutCommand: "#中英切换"}
+            label: "中英"
+            width: {percentage: 0.14}
+          - action: {shortcutCommand: "#RimeSwitcher"}
+            label: "語言"
+            width: {percentage: 0.14}
+          - action: {character: {char: "'"}}
+            label: "'"
+            processByRIME: true
+            width: {percentage: 0.10}
+          - action: space
+            label: "空格"
+            processByRIME: true
+            width: available
+          - action: backspace
+            label: "退格"
+            width: {percentage: 0.14}
+            swipe:
+              - direction: up
+                label: "清空"
+                display: true
+                action: {shortcutCommand: "#重输"}
+          - action: enter
+            label: "回車"
+            width: {percentage: 0.15}

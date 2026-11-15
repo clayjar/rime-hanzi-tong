@@ -1,0 +1,16 @@
+# Rime schema patch
+# encoding: utf-8
+#
+# 漢字通 / Han Character Bridge
+#
+# Trime and Hamster ship librime-lua. This patch loads lua/hanzi_tong.lua
+# by module name, so the mobile package does not replace rime.lua.
+#
+# engine/filters is the schema filter list, with that one line in module form.
+# If this file already exists, keep your other patches and set the Lua filter
+# to lua_filter@*hanzi_tong*balance.
+
+patch:
+  engine/filters:
+    - simplifier
+    - "lua_filter@*hanzi_tong*balance"

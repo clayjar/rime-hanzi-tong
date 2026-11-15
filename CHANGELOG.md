@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 - 2026-11-15
+
+- Add Android (Trime) and iOS / iPadOS (Hamster) packages built from the same schema, dictionaries, and Lua filter.
+- Those packages omit `rime.lua` and `default.yaml`. The filter is loaded as a Lua module, and schema registration is a patch you merge into `default.custom.yaml`.
+- Trime uses the built-in 36-key layout so digits 1–8 are on the keyboard. Hamster gets a 26-key layout with a tone row.
+
 ## 0.2.1 - 2026-11-14
 
 - Save the five language switches in `user.yaml`, so a language that is turned off stays off after leaving Rime.
