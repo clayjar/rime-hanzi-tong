@@ -73,7 +73,7 @@ Hamster imports a zip onto the files already in its Rime directory. The package 
 
 ## Packages
 
-One version, from the latest heading in `CHANGELOG.md`, is packed three ways. The linguistic files and `lua/hanzi_tong.lua` are the same in each archive. Build the dictionaries first:
+One version, from the latest heading in `CHANGELOG.md`, is packed once per frontend. The linguistic files and `lua/hanzi_tong.lua` are the same in each archive. Build the dictionaries first:
 
 ```bash
 python tools/build_dictionaries.py
@@ -82,7 +82,9 @@ python tools/package_release.py
 
 | Archive | Frontend |
 | --- | --- |
-| `dist/hanzi-tong-<version>-rime.zip` | Weasel, Squirrel, IBus, Fcitx |
+| `dist/hanzi-tong-<version>-windows-weasel.zip` | Weasel |
+| `dist/hanzi-tong-<version>-macos-squirrel.zip` | Squirrel |
+| `dist/hanzi-tong-<version>-linux-ibus-fcitx.zip` | IBus, Fcitx 5, Fcitx 4 |
 | `dist/hanzi-tong-<version>-android-trime.zip` | Trime |
 | `dist/hanzi-tong-<version>-ios-hamster.zip` | Hamster |
 

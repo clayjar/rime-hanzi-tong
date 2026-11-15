@@ -2,6 +2,8 @@
 
 The schema, dictionaries, and Lua filter stay at the repository root. This directory has no separate copy.
 
+Release archive: `hanzi-tong-<version>-macos-squirrel.zip`. It contains this installer, `tools/install-rime-user.sh`, and `rime.lua`.
+
 1. Install [Squirrel](https://github.com/rime/squirrel) 0.16 or newer, with librime-lua.
 2. From the repository root:
 

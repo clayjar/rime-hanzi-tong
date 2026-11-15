@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-"""Pack the shared schema into desktop, Trime, and Hamster archives.
+"""Pack the shared schema into one archive per frontend.
 
 The version is the first heading in CHANGELOG.md. Each zip is flat:
 Hamster rejects a wrapper directory, and Trime reads the user directory
 the same way. Mobile archives leave out rime.lua and default.yaml.
+Desktop archives include rime.lua and only that frontend's installer.
 """
 
 from __future__ import annotations
@@ -35,11 +36,20 @@ SHARED = (
 # arcname, path relative to the repository root.
 # A repeated arcname is how a platform README becomes README.md in the zip.
 PACKAGES = {
-    "rime": (
-        ("README.md", "README.md"),
+    "windows-weasel": (
+        ("README.md", "platforms/windows/README.md"),
         ("rime.lua", "rime.lua"),
         ("tools/install-weasel.ps1", "tools/install-weasel.ps1"),
+    ),
+    "macos-squirrel": (
+        ("README.md", "platforms/macos/README.md"),
+        ("rime.lua", "rime.lua"),
         ("tools/install-squirrel.sh", "tools/install-squirrel.sh"),
+        ("tools/install-rime-user.sh", "tools/install-rime-user.sh"),
+    ),
+    "linux-ibus-fcitx": (
+        ("README.md", "platforms/linux/README.md"),
+        ("rime.lua", "rime.lua"),
         ("tools/install-linux.sh", "tools/install-linux.sh"),
         ("tools/install-rime-user.sh", "tools/install-rime-user.sh"),
     ),
@@ -60,6 +70,7 @@ PACKAGES = {
 # Names an import would use to replace an existing frontend setup.
 # hanzi_tong.custom.yaml is intentionally not listed: the mobile schema
 # needs that patch, and it only rewrites the filter list.
+MOBILE_KINDS = frozenset({"android-trime", "ios-hamster"})
 MOBILE_FORBIDDEN = frozenset(
     {
         "rime.lua",
@@ -111,7 +122,7 @@ def check_members(kind: str) -> None:
             raise SystemExit(f"{kind} wraps files in {parts[0]}/")
     if "hanzi_tong.schema.yaml" not in names:
         raise SystemExit(f"{kind} is missing the schema at the archive root")
-    if kind != "rime":
+    if kind in MOBILE_KINDS:
         forbidden = sorted(set(names) & MOBILE_FORBIDDEN)
         if forbidden:
             raise SystemExit(f"{kind} would overwrite {', '.join(forbidden)}")
@@ -143,7 +154,7 @@ def main(argv: list[str] | None = None) -> int:
         "kinds",
         nargs="*",
         default=list(PACKAGES),
-        help="rime, android-trime, ios-hamster. Default: all three.",
+        help="Package id. Default: every frontend.",
     )
     parser.add_argument(
         "--check",

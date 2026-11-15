@@ -210,9 +210,12 @@ class PlatformTests(unittest.TestCase):
 
     def test_install_notes_do_not_replace_user_files(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("hanzi-tong-<version>-rime.zip", readme)
+        self.assertIn("hanzi-tong-<version>-windows-weasel.zip", readme)
+        self.assertIn("hanzi-tong-<version>-macos-squirrel.zip", readme)
+        self.assertIn("hanzi-tong-<version>-linux-ibus-fcitx.zip", readme)
         self.assertIn("hanzi-tong-<version>-android-trime.zip", readme)
         self.assertIn("hanzi-tong-<version>-ios-hamster.zip", readme)
+        self.assertNotIn("hanzi-tong-<version>-rime.zip", readme)
         for path in (
             ROOT / "platforms" / "android" / "README.md",
             ROOT / "platforms" / "ios" / "README.md",
@@ -235,9 +238,30 @@ class PackageTests(unittest.TestCase):
             self.assertNotIn("default.yaml", names)
             self.assertNotIn("default.custom.yaml", names)
             self.assertTrue(all(not name.startswith("hanzi-tong") for name in names))
-        desktop = [arc for arc, _rel in package_release.members("rime")]
-        self.assertIn("rime.lua", desktop)
-        self.assertIn("tools/install-linux.sh", desktop)
+
+    def test_desktop_archives_are_split_by_frontend(self) -> None:
+        def arcs(kind: str) -> list[str]:
+            return [arc for arc, _rel in package_release.members(kind)]
+
+        weasel = arcs("windows-weasel")
+        self.assertIn("rime.lua", weasel)
+        self.assertIn("tools/install-weasel.ps1", weasel)
+        self.assertNotIn("tools/install-squirrel.sh", weasel)
+        self.assertNotIn("tools/install-linux.sh", weasel)
+
+        squirrel = arcs("macos-squirrel")
+        self.assertIn("rime.lua", squirrel)
+        self.assertIn("tools/install-squirrel.sh", squirrel)
+        self.assertIn("tools/install-rime-user.sh", squirrel)
+        self.assertNotIn("tools/install-weasel.ps1", squirrel)
+        self.assertNotIn("tools/install-linux.sh", squirrel)
+
+        linux = arcs("linux-ibus-fcitx")
+        self.assertIn("rime.lua", linux)
+        self.assertIn("tools/install-linux.sh", linux)
+        self.assertIn("tools/install-rime-user.sh", linux)
+        self.assertNotIn("tools/install-weasel.ps1", linux)
+        self.assertNotIn("tools/install-squirrel.sh", linux)
 
     def test_sources_other_than_generated_tables_exist(self) -> None:
         generated = {

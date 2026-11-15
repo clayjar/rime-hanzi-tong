@@ -2,6 +2,8 @@
 
 The schema, dictionaries, and Lua filter stay at the repository root. This directory has no separate copy.
 
+Release archive: `hanzi-tong-<version>-linux-ibus-fcitx.zip`. IBus, Fcitx 5, and Fcitx 4 share this archive. It contains this installer, `tools/install-rime-user.sh`, and `rime.lua`.
+
 Install `ibus-rime` or `fcitx5-rime` (Fcitx 4: `fcitx-rime`) built with librime-lua. From the repository root:
 
 ```bash
