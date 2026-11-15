@@ -16,20 +16,20 @@ The idea is from Discord user @ilhanmyeong.
 
 ## Install
 
-Build the dictionaries once if `hanzi_tong.pinyin.dict.yaml` is not already present. The same files are used on every system:
+Download the archive for your frontend from the [releases](https://github.com/clayjar/rime-hanzi-tong/releases) and unzip it. The schema, dictionaries, and Lua filter are in that folder. The desktop installers copy those files into the Rime user directory, append `hanzi_tong` to `schema_list`, add the five language options to `switcher/save_options`, and add the Lua hook to `rime.lua` only when they are missing. None of them deploy, and none of them write a `hanzi_tong.custom.yaml`. Afterward, redeploy from the input-method menu (重新部署). That redeploy is what loads the saved-option list.
+
+A checkout of this repository does not include the generated dictionaries. When `hanzi_tong.pinyin.dict.yaml` is missing, build them once, then run the same installer:
 
 ```bash
 python tools/build_dictionaries.py
 ```
-
-The desktop installers copy those files into the Rime user directory, append `hanzi_tong` to `schema_list`, add the five language options to `switcher/save_options`, and add the Lua hook to `rime.lua` only when they are missing. None of them deploy, and none of them write a `hanzi_tong.custom.yaml`. Afterward, redeploy from the input-method menu (重新部署). That redeploy is what loads the saved-option list.
 
 The frontend has to include librime-lua. Weasel and Squirrel 0.16 and newer do, and Trime and Hamster ship it as well. On Linux, install `ibus-rime` or `fcitx5-rime` (Fcitx 4: `fcitx-rime`) built with librime-lua.
 
 ### Windows (Weasel)
 
 1. Install [Weasel](https://github.com/rime/weasel) 0.16 or newer.
-2. Install into `%APPDATA%\Rime`:
+2. Download `hanzi-tong-<version>-windows-weasel.zip` from the [releases](https://github.com/clayjar/rime-hanzi-tong/releases), unzip it, and from that folder install into `%APPDATA%\Rime`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/install-weasel.ps1
@@ -38,7 +38,7 @@ powershell -ExecutionPolicy Bypass -File tools/install-weasel.ps1
 ### macOS (Squirrel)
 
 1. Install [Squirrel](https://github.com/rime/squirrel) 0.16 or newer.
-2. Install into `~/Library/Rime`:
+2. Download `hanzi-tong-<version>-macos-squirrel.zip` from the [releases](https://github.com/clayjar/rime-hanzi-tong/releases), unzip it, and from that folder install into `~/Library/Rime`:
 
 ```bash
 bash tools/install-squirrel.sh
@@ -46,7 +46,7 @@ bash tools/install-squirrel.sh
 
 ### Linux (IBus or Fcitx)
 
-With no arguments, the script updates every Rime user directory that already exists among IBus, Fcitx 5, and Fcitx 4. Name the frontend to create that directory:
+Download `hanzi-tong-<version>-linux-ibus-fcitx.zip` from the [releases](https://github.com/clayjar/rime-hanzi-tong/releases) and unzip it. From that folder, the script updates every Rime user directory that already exists among IBus, Fcitx 5, and Fcitx 4. Name the frontend to create that directory:
 
 ```bash
 bash tools/install-linux.sh
@@ -65,28 +65,23 @@ bash tools/install-linux.sh fcitx
 
 ### Android (Trime)
 
-Trime includes librime-lua. Install steps, the tone-key layout, and the patches that must be merged by hand are in [platforms/android/README.md](platforms/android/README.md).
+Download `hanzi-tong-<version>-android-trime.zip` from the [releases](https://github.com/clayjar/rime-hanzi-tong/releases). Trime includes librime-lua. Install steps, the tone-key layout, and the patches that must be merged by hand are in [platforms/android/README.md](platforms/android/README.md), which is `README.md` inside that archive.
 
 ### iOS / iPadOS (Hamster)
 
-Hamster imports a zip onto the files already in its Rime directory. The package leaves `rime.lua` and `default.yaml` out so that import does not wipe them. Steps are in [platforms/ios/README.md](platforms/ios/README.md).
+Download `hanzi-tong-<version>-ios-hamster.zip` from the [releases](https://github.com/clayjar/rime-hanzi-tong/releases) and import that zip. Hamster copies it onto the files already in its Rime directory. The package leaves `rime.lua` and `default.yaml` out so that import does not wipe them. Steps are in [platforms/ios/README.md](platforms/ios/README.md), which is `README.md` inside the archive.
 
 ## Packages
 
-One version, from the latest heading in `CHANGELOG.md`, is packed once per frontend. The linguistic files and `lua/hanzi_tong.lua` are the same in each archive. Build the dictionaries first:
-
-```bash
-python tools/build_dictionaries.py
-python tools/package_release.py
-```
+The [releases](https://github.com/clayjar/rime-hanzi-tong/releases) page has one archive per frontend. `<version>` is the release name. The linguistic files and `lua/hanzi_tong.lua` are the same in each archive.
 
 | Archive | Frontend |
 | --- | --- |
-| `dist/hanzi-tong-<version>-windows-weasel.zip` | Weasel |
-| `dist/hanzi-tong-<version>-macos-squirrel.zip` | Squirrel |
-| `dist/hanzi-tong-<version>-linux-ibus-fcitx.zip` | IBus, Fcitx 5, Fcitx 4 |
-| `dist/hanzi-tong-<version>-android-trime.zip` | Trime |
-| `dist/hanzi-tong-<version>-ios-hamster.zip` | Hamster |
+| `hanzi-tong-<version>-windows-weasel.zip` | Weasel |
+| `hanzi-tong-<version>-macos-squirrel.zip` | Squirrel |
+| `hanzi-tong-<version>-linux-ibus-fcitx.zip` | IBus, Fcitx 5, Fcitx 4 |
+| `hanzi-tong-<version>-android-trime.zip` | Trime |
+| `hanzi-tong-<version>-ios-hamster.zip` | Hamster |
 
 Archives have no wrapper folder. Hamster rejects a zip that contains one, and Trime reads the user directory the same way.
 
