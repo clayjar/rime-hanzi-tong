@@ -1,0 +1,37 @@
+
+name: Build Release Packages
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build release packages
+        run: python tools/package_release.py
+
+      - name: Verify packages
+        run: |
+          test "$(find dist -name '*.zip' | wc -l)" -eq 5
+
+      - name: Publish release assets
+        env:
+          GH_TOKEN: $&#123;&#123; github.token &#125;&#125;
+        run: |
+          gh release upload "$&#123;GITHUB_REF_NAME&#125;" dist/*.zip --clobber
