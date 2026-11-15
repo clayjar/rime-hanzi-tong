@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 - 2026-11-14
+
+- Add installers for macOS Squirrel and Linux IBus, Fcitx 5, and Fcitx 4.
+- The schema, dictionaries, and Lua filter stay shared with the Weasel install.
+
 ## 0.1.0 - 2026-11-14
 
 - Add the 漢字通 / Han Character Bridge schema for Weasel.
