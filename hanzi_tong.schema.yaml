@@ -35,7 +35,9 @@ switches:
     states: [ 漢字, 汉字 ]
   # State 0 is the default and means the language stays on.
   # The option name is the off switch, so an unset option stays on.
-  # reset is omitted: Rime remembers the menu choice on every frontend.
+  # reset is omitted so a saved choice is not forced back on each load.
+  # The installers list these names in switcher/save_options. Rime writes a
+  # menu choice to user.yaml only for names on that list.
   - name: disable_guan
     states: [ 官, 官關 ]
   - name: disable_yue

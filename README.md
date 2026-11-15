@@ -22,7 +22,7 @@ Build the dictionaries once if `hanzi_tong.pinyin.dict.yaml` is not already pres
 python tools/build_dictionaries.py
 ```
 
-Each installer copies those files into the Rime user directory, appends `hanzi_tong` to `schema_list`, and adds the Lua hook to `rime.lua` only when they are missing. None of them deploy, and none of them write a `hanzi_tong.custom.yaml`, so language switches are not reset on the next deploy. Afterward, redeploy from the input-method menu (重新部署).
+Each installer copies those files into the Rime user directory, appends `hanzi_tong` to `schema_list`, adds the five language options to `switcher/save_options`, and adds the Lua hook to `rime.lua` only when they are missing. None of them deploy, and none of them write a `hanzi_tong.custom.yaml`. Afterward, redeploy from the input-method menu (重新部署). That redeploy is what loads the saved-option list.
 
 The frontend has to include librime-lua. Weasel and Squirrel 0.16 and newer do. On Linux, install `ibus-rime` or `fcitx5-rime` (Fcitx 4: `fcitx-rime`) built with librime-lua.
 
@@ -85,7 +85,7 @@ Completion is off, so `ban` does not list `bang`. Sentence mode is off: a spelli
 
 Open the schema menu from the input-method icon, or press `Ctrl+\`` while 漢字通 is active.
 
-Each language has a switch. The label is the current state. `官` means Mandarin is included. `官關` turns it off. 粵, 閩, 韓, and 日 work the same way. All five start on. Rime remembers the choice. The next keystroke uses it. No redeploy is needed.
+Each language has a switch. The label is the current state. `官` means Mandarin is included. `官關` turns it off. 粵, 閩, 韓, and 日 work the same way. All five start on. A choice made in this menu is written to `user.yaml` and is still set when you leave Rime and come back. The next keystroke uses it.
 
 A language that is off is dropped before ranking, including a word you previously picked from that language. If all five are off, character and word candidates are hidden. Punctuation and ASCII mode still work.
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 - 2026-11-14
+
+- Save the five language switches in `user.yaml`, so a language that is turned off stays off after leaving Rime.
+
 ## 0.2.0 - 2026-11-14
 
 - Add installers for macOS Squirrel and Linux IBus, Fcitx 5, and Fcitx 4.

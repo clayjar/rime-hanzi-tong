@@ -2,6 +2,42 @@
 # Sourced by the Squirrel and Linux wrappers. Does not deploy.
 # Usage: install_hanzi_tong /path/to/rime/user
 
+# Append YAML lines under the first patch: key, or create a patch block.
+insert_patch_list() {
+    local custom="$1"
+    shift
+    local block tmp
+    block="$(mktemp)"
+    tmp="$(mktemp)"
+    printf '%s\n' "$@" > "$block"
+    if [[ -f "$custom" ]] && grep -q '^patch:[[:space:]]*$' "$custom"; then
+        awk -v block="$block" '
+            BEGIN { inserted = 0 }
+            /^patch:[[:space:]]*$/ && !inserted {
+                print
+                while ((getline line < block) > 0) print line
+                close(block)
+                inserted = 1
+                next
+            }
+            { print }
+        ' "$custom" > "$tmp"
+        mv "$tmp" "$custom"
+    else
+        if [[ ! -f "$custom" || ! -s "$custom" ]]; then
+            : > "$custom"
+        elif [[ -n "$(tail -c 1 "$custom")" ]]; then
+            printf '\n' >> "$custom"
+        fi
+        {
+            printf 'patch:\n'
+            cat "$block"
+        } >> "$custom"
+        rm -f "$tmp"
+    fi
+    rm -f "$block"
+}
+
 install_hanzi_tong() {
     local dest="$1"
     local root
@@ -29,28 +65,33 @@ install_hanzi_tong() {
     cp "$root/lua/hanzi_tong.lua" "$dest/lua/hanzi_tong.lua"
 
     custom="$dest/default.custom.yaml"
+    # A copy at column 0 sits outside patch:, so Rime ignores it.
+    if [[ -f "$custom" ]] && grep -q '^switcher/save_options/+:' "$custom"; then
+        local stripped
+        stripped="$(mktemp)"
+        awk '
+            /^switcher\/save_options\/\+:[[:space:]]*$/ { skip = 1; next }
+            skip && /^[[:space:]]*- disable_(guan|yue|min|han|ri)[[:space:]]*$/ { next }
+            skip { skip = 0 }
+            { print }
+        ' "$custom" > "$stripped"
+        mv "$stripped" "$custom"
+    fi
     if [[ ! -f "$custom" ]] || ! grep -q 'schema:[[:space:]]*hanzi_tong' "$custom"; then
-        if [[ -f "$custom" ]] && grep -q '^patch:[[:space:]]*$' "$custom"; then
-            local tmp
-            tmp="$(mktemp)"
-            awk '
-                BEGIN { inserted = 0 }
-                /^patch:[[:space:]]*$/ && !inserted {
-                    print
-                    print "  schema_list/+:"
-                    print "    - schema: hanzi_tong"
-                    inserted = 1
-                    next
-                }
-                { print }
-            ' "$custom" > "$tmp"
-            mv "$tmp" "$custom"
-        else
-            if [[ -f "$custom" && -s "$custom" ]]; then
-                printf '\n' >> "$custom"
-            fi
-            printf 'patch:\n  schema_list/+:\n    - schema: hanzi_tong\n' >> "$custom"
-        fi
+        insert_patch_list "$custom" \
+            "  schema_list/+:" \
+            "    - schema: hanzi_tong"
+    fi
+    # Omitting reset on a switch is not enough. Rime writes a menu choice to
+    # user.yaml only when the option name is listed in switcher/save_options.
+    if [[ ! -f "$custom" ]] || ! grep -Eq '^[[:space:]]+switcher/save_options/\+:[[:space:]]*$' "$custom"; then
+        insert_patch_list "$custom" \
+            "  switcher/save_options/+:" \
+            "    - disable_guan" \
+            "    - disable_yue" \
+            "    - disable_min" \
+            "    - disable_han" \
+            "    - disable_ri"
     fi
 
     lua_path="$dest/rime.lua"

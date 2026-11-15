@@ -105,9 +105,19 @@ class SchemaTests(unittest.TestCase):
         for option in ("disable_guan", "disable_yue", "disable_min", "disable_han", "disable_ri"):
             self.assertIn(f"name: {option}", self.schema)
             self.assertIn(option, self.lua)
-        # The language switches omit reset so Weasel remembers them.
+        # reset would force the switch on every load. Persistence is the
+        # switcher/save_options list added by the installers.
         section = self.schema.split("name: disable_guan", 1)[1]
         self.assertNotIn("\n    reset:", section)
+        self.assertIn("switcher/save_options", self.schema)
+
+    def test_installers_save_language_options(self) -> None:
+        weasel = (ROOT / "tools" / "install-weasel.ps1").read_text(encoding="utf-8")
+        shared = (ROOT / "tools" / "install-rime-user.sh").read_text(encoding="utf-8")
+        for script in (weasel, shared):
+            self.assertIn("switcher/save_options/+", script)
+            for option in ("disable_guan", "disable_yue", "disable_min", "disable_han", "disable_ri"):
+                self.assertIn(option, script)
 
     def test_future_hooks_are_comments_not_behavior(self) -> None:
         self.assertIn("enable_sentence: false", self.schema)

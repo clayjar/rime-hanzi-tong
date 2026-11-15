@@ -37,18 +37,92 @@ if (Test-Path -LiteralPath $custom) {
     $customText = ""
 }
 
-if ($customText -notmatch "schema:\s*hanzi_tong") {
-    $block = "  schema_list/+:`r`n    - schema: hanzi_tong"
-    if ($customText -match "(?m)^patch:[ \t]*$") {
-        $customText = [regex]::Replace($customText, "(?m)^patch:[ \t]*$", "patch:`r`n$block", 1)
-    } else {
-        if ($customText.Length -gt 0 -and -not $customText.EndsWith("`n")) {
-            $customText += "`r`n"
-        }
-        $customText += "patch:`r`n$block`r`n"
+# Work line by line. A trailing CR would hide "patch:" from a $ anchor, and a
+# second top-level patch: would replace the schema list.
+$lines = New-Object System.Collections.Generic.List[string]
+$skipRootOptions = $false
+foreach ($line in [regex]::Split($customText, "\r\n|\n|\r")) {
+    if (-not $skipRootOptions -and $line -match '^switcher/save_options/\+:\s*$') {
+        $skipRootOptions = $true
+        continue
     }
-    [System.IO.File]::WriteAllText($custom, $customText, $utf8)
+    if ($skipRootOptions) {
+        if ($line -match '^\s*- disable_(guan|yue|min|han|ri)\s*$') {
+            continue
+        }
+        $skipRootOptions = $false
+    }
+    $lines.Add($line)
 }
+while ($lines.Count -gt 0 -and $lines[$lines.Count - 1] -eq "") {
+    $lines.RemoveAt($lines.Count - 1)
+}
+
+function Add-AfterFirstPatch {
+    param(
+        [System.Collections.Generic.List[string]]$Lines,
+        [string[]]$Block
+    )
+    $index = -1
+    for ($i = 0; $i -lt $Lines.Count; $i++) {
+        if ($Lines[$i] -match '^patch:\s*$') {
+            $index = $i
+            break
+        }
+    }
+    if ($index -lt 0) {
+        if ($Lines.Count -gt 0) {
+            $Lines.Add("")
+        }
+        $Lines.Add("patch:")
+        $index = $Lines.Count - 1
+    }
+    for ($j = $Block.Count - 1; $j -ge 0; $j--) {
+        $Lines.Insert($index + 1, $Block[$j])
+    }
+}
+
+$hasSchema = $false
+$hasSave = $false
+foreach ($line in $lines) {
+    if ($line -match 'schema:\s*hanzi_tong') { $hasSchema = $true }
+    if ($line -match '^\s+switcher/save_options/\+:\s*$') { $hasSave = $true }
+}
+if (-not $hasSchema) {
+    Add-AfterFirstPatch $lines @("  schema_list/+:", "    - schema: hanzi_tong")
+}
+# Omitting reset on a switch is not enough. Rime writes a menu choice to
+# user.yaml only when the option name is listed in switcher/save_options.
+if (-not $hasSave) {
+    Add-AfterFirstPatch $lines @(
+        "  switcher/save_options/+:",
+        "    - disable_guan",
+        "    - disable_yue",
+        "    - disable_min",
+        "    - disable_han",
+        "    - disable_ri"
+    )
+}
+
+# Drop a later patch: that only repeats the saved-option list.
+$collapsed = New-Object System.Collections.Generic.List[string]
+$seenPatch = $false
+for ($i = 0; $i -lt $lines.Count; $i++) {
+    $line = $lines[$i]
+    if ($seenPatch -and $line -match '^patch:\s*$') {
+        $next = if ($i + 1 -lt $lines.Count) { $lines[$i + 1] } else { "" }
+        if ($next -match '^\s+switcher/save_options/\+:\s*$') {
+            continue
+        }
+    }
+    if ($line -match '^patch:\s*$') {
+        $seenPatch = $true
+    }
+    $collapsed.Add($line)
+}
+
+$customText = ($collapsed -join "`r`n") + "`r`n"
+[System.IO.File]::WriteAllText($custom, $customText, $utf8)
 
 $luaPath = Join-Path $rime "rime.lua"
 $hook = [System.IO.File]::ReadAllText((Join-Path $root "rime.lua"), $utf8).TrimEnd() + "`r`n"
