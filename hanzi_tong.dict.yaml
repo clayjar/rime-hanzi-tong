@@ -1,0 +1,19 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# 漢字通 / Han Character Bridge
+# Merges the five language tables. Codes carry a language marker
+# so identical spellings do not collapse into one reading.
+#
+---
+name: hanzi_tong
+version: "0.1.0"
+sort: by_weight
+use_preset_vocabulary: false
+import_tables:
+  - hanzi_tong.pinyin
+  - hanzi_tong.jyutping
+  - hanzi_tong.poj
+  - hanzi_tong.hanja
+  - hanzi_tong.kanji
+...

@@ -1,0 +1,131 @@
+# Rime schema
+# encoding: utf-8
+#
+# 漢字通 / Han Character Bridge
+#
+# One QWERTY spelling searches Mandarin, Cantonese, Minnan, Korean Hanja,
+# and Japanese Kanji. v0.1 looks up characters and words only.
+#
+# Not in this version:
+# - Mixed-language sentences. enable_sentence stays false. A later
+#   translator can compose a sentence from more than one language.
+# - Context-aware prediction. lua/hanzi_tong.lua leaves contextual_score()
+#   returning nil. A later model can rescore candidates from the committed
+#   sentence, including mixed pronunciations.
+# - A cross-language n/ng bridge. Japanese ん is Hepburn n, so `ban` is
+#   ばん and `bang` is not. That bridge can be an optional fuzzy layer later.
+
+schema:
+  schema_id: hanzi_tong
+  name: "漢字通"
+  version: "0.1.0"
+  description: "Unified multilingual Han character input method"
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+  # State 0 is traditional, the stored dictionary form.
+  # OpenCC t2s also converts Japanese shinjitai and Korean hanja.
+  - name: simplification
+    states: [ 漢字, 汉字 ]
+  # State 0 is the default and means the language stays on.
+  # The option name is the off switch, so an unset option stays on.
+  # reset is omitted: Weasel remembers the menu choice.
+  - name: disable_guan
+    states: [ 官, 官關 ]
+  - name: disable_yue
+    states: [ 粵, 粵關 ]
+  - name: disable_min
+    states: [ 閩, 閩關 ]
+  - name: disable_han
+    states: [ 韓, 韓關 ]
+  - name: disable_ri
+    states: [ 日, 日關 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - script_translator
+  filters:
+    - simplifier
+    - lua_filter@hanzi_tong_balance
+
+speller:
+  # Digits are tone keys, not candidate numbers.
+  # Uppercase language markers (G Y M H J) are not listed, so they cannot be typed.
+  alphabet: zyxwvutsrqponmlkjihgfedcba12345678
+  initials: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " '"
+  algebra:
+    # Drop the untyped language marker. Applied per syllable.
+    - derive/^[GYMHJ]//
+    # Korean and Japanese syllables are stored with a final 0.
+    # Keep the toneless spelling and also accept a typed tone 1-8.
+    - derive/0$//
+    - derive/0$/1/
+    - derive/0$/2/
+    - derive/0$/3/
+    - derive/0$/4/
+    - derive/0$/5/
+    - derive/0$/6/
+    - derive/0$/7/
+    - derive/0$/8/
+    # Toned 官 / 粵 / 閩 syllables also match with the digit omitted.
+    # derive keeps the original spelling, so bang1 does not match bang2.
+    - derive/[1-8]//
+
+translator:
+  dictionary: hanzi_tong
+  # The hint is the dictionary code, including the language marker.
+  # The Lua filter rewrites it to 官 bang1 / 韓 bang / 日 ban.
+  spelling_hints: 8
+  enable_completion: false
+  enable_sentence: false
+  enable_encoder: false
+  enable_user_dict: true
+  user_dict: hanzi_tong
+
+simplifier:
+  opencc_config: t2s.json
+  option_name: simplification
+  tips: none
+
+menu:
+  page_size: 9
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+  bindings:
+    # Page with [ ] and - =. Digits stay in the speller as tone keys.
+    - { when: has_menu, accept: bracketleft, send: Page_Up }
+    - { when: has_menu, accept: bracketright, send: Page_Down }
+    - { when: has_menu, accept: minus, send: Page_Up }
+    - { when: has_menu, accept: equal, send: Page_Down }
+    - { when: has_menu, accept: comma, send: comma }
+    - { when: has_menu, accept: period, send: period }
+
+recognizer:
+  import_preset: default
