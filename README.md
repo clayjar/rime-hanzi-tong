@@ -1,6 +1,6 @@
 # 漢字通 / Han Character Bridge
 
-One QWERTY spelling looks up Mandarin, Cantonese, Minnan, Korean Hanja, and Japanese Kanji. Version 0.1.0 is a Weasel (小狼毫) schema for characters and words.
+Unified multilingual phonetic input for 漢字: type a spelling in Latin letters and 漢字通 looks up Mandarin, Cantonese, Minnan, Korean Hanja, and Japanese Kanji from that same input. Version 0.1.0 is a Weasel (小狼毫) schema for characters and words.
 
 | | |
 | --- | --- |
