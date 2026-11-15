@@ -8,7 +8,9 @@ Unified multilingual phonetic input for 漢字: type a spelling in Latin letters
 | English name | Han Character Bridge |
 | Schema ID | `hanzi_tong` |
 
-Each candidate is marked with the reading that produced it: 官, 粵, 閩, 韓, or 日.
+Each candidate is marked with the reading that produced it: 官, 粵, 閩, 韓, or 日.  (You can toggle any language off.)
+
+![IME in action](https://files.mhan.dev/img/rime-hanzi-tong-1.png "when typing bang")
 
 ## Install on Windows
 
