@@ -12,7 +12,9 @@ Each candidate is marked with the reading that produced it: 官, 粵, 閩, 韓, 
 
 The idea is from Discord user @ilhanmyeong.
 
-![IME in action](https://files.mhan.dev/img/rime-hanzi-tong-1.png "when typing bang")
+Desktop | Mobile
+:---:|:---:
+![IME in Windows 11](https://files.mhan.dev/img/rime-hanzi-tong-1.png "when typing bang") | ![IME in Android](https://files.mhan.dev/img/rime-hanzi-tong-2.jpg "when typing libai")
 
 ## Install
 
