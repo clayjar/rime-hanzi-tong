@@ -1,6 +1,6 @@
-# 漢字通 / Han Character Bridge
+# Rime 漢字通 / Rime Hanzi Tong
 
-Unified multilingual phonetic input for 漢字: type a spelling in Latin letters and 漢字通 looks up Mandarin, Cantonese, Minnan, Korean Hanja, and Japanese Kanji from that same input. Schema 0.1.0 is for characters and words on Weasel (小狼毫), Squirrel (鼠鬚管), IBus or Fcitx, Trime (同文), and Hamster (倉輸入法).
+This is a Rime schema to provide unified multilingual phonetic input for 漢字: type a spelling in Latin letters and 漢字通 looks up Mandarin, Cantonese, Minnan, Korean Hanja, and Japanese Kanji from that same input. Schema 0.1.0 is for characters and words on Weasel (小狼毫), Squirrel (鼠鬚管), IBus or Fcitx, Trime (同文), and Hamster (倉輸入法).
 
 | | |
 | --- | --- |
